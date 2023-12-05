@@ -1,0 +1,70 @@
+name: Microservice deploy to EKS
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Add steps to install dependencies for your services, if needed
+    - name: Install dependencies and run unit tests for each service
+      run: |
+        cd issues-service && npm install && npm test
+        cd ../main-application && npm install && npm test
+
+    - name: Login to Docker Registry
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        # Or use the appropriate command for your container registry
+
+    - name: Build and push Docker images
+      run: |
+        cd commit-service && docker build -t senuradockacc/commit-service:v1 --build-arg AWS_ACCESS_KEY_ID_ARG=${{ secrets.AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY_ARG=${{ secrets.AWS_SECRET_ACCESS_KEY }} .
+        docker push senuradockacc/commit-service:v1
+
+        cd ../issues-service && docker build -t senuradockacc/issues-service:latest .
+        docker push senuradockacc/issues-service:latest
+
+        cd ../pull-request-service && docker build -t senuradockacc/pull-request-service:latest .
+        docker push senuradockacc/pull-request-service:latest
+
+        cd ../main-application && docker build -t senuradockacc/main-app-service:latest .
+        docker push senuradockacc/main-app-service:latest
+
+    # - name: Configure Google Cloud CLI
+    #   uses: google-github-actions/setup-gcloud@v0
+    #   with:
+    #     service_account_key: ${{ secrets.GCP_SA_KEY }}
+    #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+    #     install_components: 'gke-gcloud-auth-plugin'
+    #     export_default_credentials: true
+    
+    # - name: Deploy to GKE
+    #   run: |
+    #     gcloud container clusters get-credentials clustertest --project ${{ secrets.GCP_PROJECT_ID }} --region us-central1-c
+        
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" commit-deployment.yaml
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" commit-service.yaml
+    #     kubectl apply -f commit-deployment.yaml
+    #     kubectl apply -f commit-service.yaml
+
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" issues-deployment.yaml
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" issues-service.yaml
+    #     kubectl apply -f issues-deployment.yaml
+    #     kubectl apply -f issues-service.yaml
+
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" pull-deployment.yaml
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" pull-service.yaml
+    #     kubectl apply -f pull-deployment.yaml
+    #     kubectl apply -f pull-service.yaml
+
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" main-deployment.yaml
+    #     sed -i "s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" main-service.yaml
+    #     kubectl apply -f main-deployment.yaml
+    #     kubectl apply -f main-service.yaml
