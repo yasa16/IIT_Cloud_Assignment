@@ -3,7 +3,7 @@ const app = require('./app'); // Assuming your Express app setup is in app.js or
 
 describe('Test endpoints', () => {
   it('responds with issues on', async () => {
-    const response = await request(app).get('/api/issues/senuravihanjayadeva/coding-challange');
+    const response = await request(app).get('/api/issues/Trinea/android-open-project');
     expect(response.status).toBe(200);
   });
 
