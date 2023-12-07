@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: pull-request-service
-          image: senuradockacc/pull-request-service:latest
+          image: yasasmi/pull-request-service:version-one
           imagePullPolicy: Always
           ports:
             - containerPort: 3001

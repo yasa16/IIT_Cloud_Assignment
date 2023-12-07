@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: issues-service
-          image: senuradockacc/issues-service:latest
+          image: yasasmi/issues-service:version-one
           imagePullPolicy: Always
           ports:
             - containerPort: 3002
