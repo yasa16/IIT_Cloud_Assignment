@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: main-app-service
-          image: senuradockacc/main-app-service:latest
+          image: yasasmi/main-app-service:version-one
           imagePullPolicy: Always
           ports:
             - containerPort: 3003
