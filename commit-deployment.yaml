@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: commit-service
-          image: yasasmi/commit-service:version-two
+          image: yasasmi/commit-service:version-three
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
