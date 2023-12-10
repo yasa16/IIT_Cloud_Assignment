@@ -25,8 +25,8 @@ jobs:
 
     - name: Build and push Docker images
       run: |
-        cd commit-service && docker build -t yasasmi/commit-service:version-three --build-arg AWS_ACCESS_KEY_ID_ARG=${{ secrets.AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY_ARG=${{ secrets.AWS_SECRET_ACCESS_KEY }} .
-        docker push yasasmi/commit-service:version-three
+        cd commit-service && docker build -t yasasmi/commit-service:version-4 --build-arg AWS_ACCESS_KEY_ID_ARG=${{ secrets.AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY_ARG=${{ secrets.AWS_SECRET_ACCESS_KEY }} .
+        docker push yasasmi/commit-service:version-4
 
         cd ../issues-service && docker build -t yasasmi/issues-service:version-one .
         docker push yasasmi/issues-service:version-one
